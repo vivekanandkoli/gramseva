@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GramSeva — ग्रामसेवा</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth: #2C1810;
+    --soil: #5C3D2E;
+    --clay: #8B5E3C;
+    --wheat: #D4A853;
+    --harvest: #E8C170;
+    --cream: #FBF5E6;
+    --sage: #7A8C6E;
+    --leaf: #4A6741;
+    --sky: #B8D4E8;
+    --white: #FFFFFF;
+    --danger: #C0392B;
+    --success: #27AE60;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--earth);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    animation: fadeIn 0.35s ease;
+  }
+  .screen.active { display: flex; flex-direction: column; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SPLASH ── */
+  #splash {
+    background: var(--earth);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  #splash::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(212,168,83,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    border-radius: 50%;
+  }
+  #splash::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(74,103,65,0.2) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+    border-radius: 50%;
+  }
+
+  .logo-wrap {
+    position: relative;
+    margin-bottom: 32px;
+  }
+  .logo-icon {
+    width: 88px; height: 88px;
+    background: var(--wheat);
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 32px rgba(212,168,83,0.4);
+  }
+  .app-name-mr {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 42px;
+    color: var(--wheat);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .app-name-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+  .tagline {
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+    margin: 24px 0 40px;
+    line-height: 1.6;
+  }
+  .tagline span {
+    display: block;
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 17px;
+    color: var(--harvest);
+    margin-bottom: 4px;
+  }
+
+  .btn-primary {
+    background: var(--wheat);
+    color: var(--earth);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(212,168,83,0.5);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,168,83,0.6); }
+
+  .btn-secondary {
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
+    display: inline-block;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+
+  /* ── ROLE SELECT ── */
+  #roleselect {
+    background: var(--earth);
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  .role-title {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 28px;
+    color: var(--wheat);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .role-sub {
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .role-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 360px;
+  }
+  .role-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,168,83,0.2);
+    border-radius: 20px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .role-card:hover {
+    background: rgba(212,168,83,0.12);
+    border-color: var(--wheat);
+    transform: translateX(4px);
+  }
+  .role-emoji { font-size: 36px; }
+  .role-info h3 {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 20px;
+    color: var(--harvest);
+    margin-bottom: 4px;
+  }
+  .role-info p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+  }
+  .role-arrow {
+    margin-left: auto;
+    color: var(--wheat);
+    font-size: 20px;
+    opacity: 0.6;
+  }
+
+  /* ── NAV BAR ── */
+  .navbar {
+    background: var(--earth);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(212,168,83,0.15);
+  }
+  .nav-back {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: var(--harvest);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .nav-back:hover { background: rgba(255,255,255,0.15); }
+  .nav-title {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    color: var(--wheat);
+    font-size: 18px;
+  }
+  .nav-avatar {
+    margin-left: auto;
+    width: 36px; height: 36px;
+    background: var(--clay);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* ── FARMER HOME ── */
+  .page-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .greeting-card {
+    background: linear-gradient(135deg, var(--soil) 0%, var(--earth) 100%);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(212,168,83,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .greeting-card::after {
+    content: '🌾';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 52px;
+    opacity: 0.3;
+  }
+  .greeting-hello {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    color: var(--harvest);
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .greeting-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+  }
+  .weather-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(212,168,83,0.15);
+    border: 1px solid rgba(212,168,83,0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--harvest);
+    margin-top: 12px;
+  }
+
+  .section-label {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 20px;
+    color: var(--earth);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(92,61,46,0.15);
+  }
+
+  /* Service Grid */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .service-tile {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+  }
+  .service-tile:hover {
+    border-color: var(--wheat);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(44,24,16,0.1);
+  }
+  .service-tile.active { border-color: var(--wheat); background: #fffbf0; }
+  .service-icon { font-size: 28px; margin-bottom: 8px; }
+  .service-name {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 13px;
+    color: var(--earth);
+    line-height: 1.3;
+  }
+  .service-name-en {
+    font-size: 10px;
+    color: var(--clay);
+    margin-top: 2px;
+  }
+
+  /* Active Bookings */
+  .booking-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--sage);
+    box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .booking-card:hover { transform: translateX(4px); }
+  .booking-card.pending { border-left-color: var(--wheat); }
+  .booking-card.confirmed { border-left-color: var(--success); }
+  .booking-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .booking-service {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 17px;
+    color: var(--earth);
+  }
+  .status-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .status-pending { background: #FEF3C7; color: #92400E; }
+  .status-confirmed { background: #D1FAE5; color: #065F46; }
+  .booking-detail {
+    font-size: 13px;
+    color: var(--clay);
+    display: flex;
+    gap: 16px;
+  }
+  .booking-detail span { display: flex; align-items: center; gap: 4px; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    background: var(--earth);
+    border-top: 1px solid rgba(212,168,83,0.15);
+    display: flex;
+    padding: 8px 0 16px;
+  }
+  .bnav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+  }
+  .bnav-icon { font-size: 22px; opacity: 0.5; }
+  .bnav-label {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+  }
+  .bnav-item.active .bnav-icon { opacity: 1; }
+  .bnav-item.active .bnav-label { color: var(--wheat); }
+
+  /* ── BOOKING FORM ── */
+  #bookingform .page-content {
+    background: var(--cream);
+  }
+  .form-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.06);
+  }
+  .form-card h3 {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 18px;
+    color: var(--earth);
+    margin-bottom: 16px;
+  }
+  .selected-service-banner {
+    background: linear-gradient(135deg, #fffbf0, #fef3c7);
+    border: 1px solid var(--wheat);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .sel-icon { font-size: 30px; }
+  .sel-name {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 17px;
+    color: var(--earth);
+  }
+  .sel-change {
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--clay);
+    color: var(--clay);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .form-label {
+    display: block;
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 14px;
+    color: var(--soil);
+    margin-bottom: 6px;
+  }
+  .form-label span { font-family: 'DM Sans'; font-size: 11px; color: var(--clay); }
+  .form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid rgba(92,61,46,0.2);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--earth);
+    background: var(--cream);
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--wheat);
+  }
+
+  .worker-picker {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .worker-btn {
+    width: 40px; height: 40px;
+    background: var(--earth);
+    color: var(--wheat);
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+  }
+  .worker-count {
+    flex: 1;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--earth);
+  }
+
+  .note-box {
+    background: #FEF3C7;
+    border: 1px solid #FCD34D;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #92400E;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .note-box strong {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--earth);
+    color: var(--wheat);
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(44,24,16,0.3);
+  }
+  .submit-btn:hover {
+    background: var(--soil);
+    transform: translateY(-2px);
+  }
+
+  /* ── SUCCESS ── */
+  #success {
+    background: var(--cream);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .success-circle {
+    width: 100px; height: 100px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+    margin: 0 auto 28px;
+    box-shadow: 0 8px 32px rgba(39,174,96,0.3);
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .success-title {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 28px;
+    color: var(--earth);
+    margin-bottom: 8px;
+  }
+  .success-sub { color: var(--clay); font-size: 14px; line-height: 1.6; margin-bottom: 28px; }
+  .booking-ref {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 28px;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.08);
+    text-align: left;
+  }
+  .ref-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(92,61,46,0.08);
+    font-size: 13px;
+  }
+  .ref-row:last-child { border-bottom: none; }
+  .ref-label { color: var(--clay); }
+  .ref-value {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    color: var(--earth);
+    font-weight: 600;
+  }
+  .whatsapp-btn {
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+  }
+
+  /* ── WORKER HOME ── */
+  #workerhome .page-content { background: var(--cream); }
+  .worker-greeting {
+    background: linear-gradient(135deg, var(--leaf) 0%, #2d5a27 100%);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .worker-greeting::after {
+    content: '👷';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 52px;
+    opacity: 0.25;
+  }
+  .worker-greeting h2 {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: #C8E6C9;
+  }
+  .worker-greeting p { font-size: 13px; opacity: 0.7; }
+  .earning-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-top: 12px;
+    color: #A5D6A7;
+  }
+
+  .job-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .job-card:hover { border-color: var(--sage); }
+  .job-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .job-title {
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 18px;
+    color: var(--earth);
+  }
+  .job-wage {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--leaf);
+  }
+  .job-wage span { font-size: 11px; font-weight: 400; color: var(--clay); }
+  .job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .job-tag {
+    background: var(--cream);
+    border: 1px solid rgba(92,61,46,0.15);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--soil);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .job-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-accept {
+    flex: 1;
+    background: var(--leaf);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-accept:hover { background: #3a5230; }
+  .btn-decline {
+    background: none;
+    border: 1.5px solid rgba(92,61,46,0.2);
+    color: var(--clay);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  /* Skills badge */
+  .skills-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .skill-badge {
+    background: var(--earth);
+    color: var(--harvest);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'Tiro Devanagari Marathi', serif;
+    font-size: 13px;
+  }
+
+  /* Mobile frame hint */
+  .demo-bar {
+    background: var(--soil);
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    text-align: center;
+    padding: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* Availability toggle */
+  .avail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+  }
+  .avail-label { font-family: 'Tiro Devanagari Marathi', serif; font-size: 15px; color: var(--earth); }
+  .avail-label span { display: block; font-family: 'DM Sans'; font-size: 11px; color: var(--clay); margin-top: 2px; }
+  .toggle {
+    width: 52px; height: 28px;
+    background: var(--sage);
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .toggle.on { background: var(--success); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(24px); }
+
+  /* responsive max-width for desktop preview */
+  @media (min-width: 640px) {
+    body {
+      background: #1a1a1a;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      gap: 40px;
+    }
+    .app-shell {
+      width: 375px;
+      min-height: 812px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      border: 8px solid #2a2a2a;
+      flex-shrink: 0;
+    }
+    .app-shell body { padding: 0; }
+    .info-panel {
+      max-width: 280px;
+      padding-top: 20px;
+    }
+    .info-panel h2 {
+      font-family: 'Playfair Display', serif;
+      color: white;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .info-panel p { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.7; margin-bottom: 12px; }
+    .flow-step {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .flow-num {
+      width: 24px; height: 24px;
+      background: var(--wheat);
+      color: var(--earth);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .flow-text { color: rgba(255,255,255,0.6); font-size: 12px; line-height: 1.6; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">📱 GRAMSEVA — PHASE 1 PROTOTYPE</div>
+
+<!-- SCREEN 1: SPLASH -->
+<div id="splash" class="screen active">
+  <div class="logo-wrap">
+    <div class="logo-icon">🌾</div>
+    <div class="app-name-mr">ग्रामसेवा</div>
+    <div class="app-name-en">GramSeva</div>
+  </div>
+  <p class="tagline">
+    <span>शेतकऱ्यांचा विश्वासू साथीदार</span>
+    Your trusted farm services partner
+  </p>
+  <button class="btn-primary" onclick="go('roleselect')">सुरू करा · Get Started</button>
+  <button class="btn-secondary" onclick="go('roleselect')">आधीचे खाते आहे? Login</button>
+</div>
+
+<!-- SCREEN 2: ROLE SELECT -->
+<div id="roleselect" class="screen">
+  <div style="flex:1; background:var(--earth); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px;">
+    <p style="color:rgba(255,255,255,0.4); font-size:13px; margin-bottom:8px;">तुम्ही कोण आहात?</p>
+    <div class="role-title">तुमची भूमिका निवडा</div>
+    <p class="role-sub">Select your role to continue</p>
+    <div class="role-cards">
+      <div class="role-card" onclick="go('farmerhome')">
+        <div class="role-emoji">👨‍🌾</div>
+        <div class="role-info">
+          <h3>शेतकरी</h3>
+          <p>Farmer · मजूर आणि यंत्रे बुक करा</p>
+        </div>
+        <div class="role-arrow">›</div>
+      </div>
+      <div class="role-card" onclick="go('workerhome')">
+        <div class="role-emoji">👷</div>
+        <div class="role-info">
+          <h3>मजूर / कंत्राटदार</h3>
+          <p>Worker / Contractor · काम शोधा</p>
+        </div>
+        <div class="role-arrow">›</div>
+      </div>
+      <div class="role-card" onclick="go('farmerhome')">
+        <div class="role-emoji">🚜</div>
+        <div class="role-info">
+          <h3>यंत्र मालक</h3>
+          <p>Machinery Owner · तुमचे यंत्र भाड्याने द्या</p>
+        </div>
+        <div class="role-arrow">›</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: FARMER HOME -->
+<div id="farmerhome" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="go('roleselect')">←</button>
+    <span class="nav-title">ग्रामसेवा · Agalgaon</span>
+    <div class="nav-avatar">👨‍🌾</div>
+  </div>
+  <div class="page-content">
+
+    <!-- Greeting -->
+    <div class="greeting-card">
+      <div class="greeting-hello">नमस्कार, रामराव!</div>
+      <div class="greeting-sub">आजचा दिवस शुभ असो 🙏</div>
+      <div class="weather-pill">☀️ आजचे हवामान: 32°C · Sangli</div>
+    </div>
+
+    <!-- Services -->
+    <div class="section-label">सेवा बुक करा</div>
+    <div class="service-grid">
+      <div class="service-tile" onclick="selectService('छाटणी','✂️'); go('bookingform')">
+        <div class="service-icon">✂️</div>
+        <div class="service-name">छाटणी</div>
+        <div class="service-name-en">Trimming</div>
+      </div>
+      <div class="service-tile" onclick="selectService('फवारणी','💧'); go('bookingform')">
+        <div class="service-icon">💧</div>
+        <div class="service-name">फवारणी</div>
+        <div class="service-name-en">Spraying</div>
+      </div>
+      <div class="service-tile" onclick="selectService('नागरणी','🔧'); go('bookingform')">
+        <div class="service-icon">🔧</div>
+        <div class="service-name">नागरणी</div>
+        <div class="service-name-en">Tilling</div>
+      </div>
+      <div class="service-tile" onclick="selectService('तोडणी','🍇'); go('bookingform')">
+        <div class="service-icon">🍇</div>
+        <div class="service-name">तोडणी</div>
+        <div class="service-name-en">Harvesting</div>
+      </div>
+      <div class="service-tile" onclick="selectService('पेरणी','🌱'); go('bookingform')">
+        <div class="service-icon">🌱</div>
+        <div class="service-name">पेरणी</div>
+        <div class="service-name-en">Sowing</div>
+      </div>
+      <div class="service-tile" onclick="selectService('ट्रॅक्टर','🚜'); go('bookingform')">
+        <div class="service-icon">🚜</div>
+        <div class="service-name">ट्रॅक्टर</div>
+        <div class="service-name-en">Tractor</div>
+      </div>
+    </div>
+
+    <!-- Active Bookings -->
+    <div class="section-label">माझ्या बुकिंग्स</div>
+
+    <div class="booking-card confirmed" onclick="alert('बुकिंग पुष्टी झाली आहे!\n\nसेवा: फवारणी\nतारीख: उद्या, सकाळी 7 वाजता\nमजूर: राजू शिंदे (⭐ 4.8)\nमोबाईल: 9876XXXXX')">
+      <div class="booking-head">
+        <div class="booking-service">💧 फवारणी</div>
+        <span class="status-badge status-confirmed">✓ पुष्टी झाली</span>
+      </div>
+      <div class="booking-detail">
+        <span>📅 उद्या, सकाळी 7</span>
+        <span>👤 राजू शिंदे</span>
+        <span>🍇 2 एकर</span>
+      </div>
+    </div>
+
+    <div class="booking-card pending" onclick="alert('प्रतीक्षेत आहे...\n\nसेवा: छाटणी\nतारीख: 8 जून\nमजूर शोधत आहोत...\n\nतुम्हाला WhatsApp वर कळवले जाईल!')">
+      <div class="booking-head">
+        <div class="booking-service">✂️ छाटणी</div>
+        <span class="status-badge status-pending">⏳ शोधत आहोत</span>
+      </div>
+      <div class="booking-detail">
+        <span>📅 8 जून</span>
+        <span>👥 5 मजूर</span>
+        <span>🍇 3 एकर</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="bottom-nav">
+    <button class="bnav-item active">
+      <span class="bnav-icon">🏠</span>
+      <span class="bnav-label">मुख्यपृष्ठ</span>
+    </button>
+    <button class="bnav-item" onclick="go('bookingform')">
+      <span class="bnav-icon">➕</span>
+      <span class="bnav-label">बुकिंग</span>
+    </button>
+    <button class="bnav-item">
+      <span class="bnav-icon">📋</span>
+      <span class="bnav-label">इतिहास</span>
+    </button>
+    <button class="bnav-item" onclick="alert('WhatsApp वर संपर्क करा:\n📱 9999-XXXXXX\n\nकिंवा कॉल करा — आम्ही मराठीत बोलतो!')">
+      <span class="bnav-icon">💬</span>
+      <span class="bnav-label">मदत</span>
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 4: BOOKING FORM -->
+<div id="bookingform" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="go('farmerhome')">←</button>
+    <span class="nav-title">नवीन बुकिंग</span>
+  </div>
+  <div class="page-content">
+
+    <div class="form-card">
+      <h3>🌾 कोणती सेवा हवी?</h3>
+      <div class="selected-service-banner">
+        <span class="sel-icon" id="selIcon">✂️</span>
+        <span class="sel-name" id="selName">छाटणी</span>
+        <button class="sel-change" onclick="go('farmerhome')">बदला</button>
+      </div>
+
+      <label class="form-label">तारीख निवडा <span>(Select date)</span></label>
+      <input type="date" class="form-input" id="dateInput">
+
+      <label class="form-label">वेळ <span>(Preferred time)</span></label>
+      <select class="form-input">
+        <option>सकाळी 6 वाजता (6 AM)</option>
+        <option>सकाळी 7 वाजता (7 AM)</option>
+        <option>सकाळी 8 वाजता (8 AM)</option>
+        <option>दुपारी 12 वाजता (12 PM)</option>
+      </select>
+
+      <label class="form-label">किती एकर? <span>(Acres)</span></label>
+      <input type="number" class="form-input" placeholder="उदा: 2" min="1" max="50">
+    </div>
+
+    <div class="form-card">
+      <h3>👥 किती मजूर हवे?</h3>
+      <div class="worker-picker">
+        <button class="worker-btn" onclick="changeWorkers(-1)">−</button>
+        <div class="worker-count" id="workerCount">4</div>
+        <button class="worker-btn" onclick="changeWorkers(1)">+</button>
+      </div>
+      <p style="font-size:12px; color:var(--clay); text-align:center;">मजूर संख्या · Number of workers</p>
+    </div>
+
+    <div class="form-card">
+      <h3>📍 शेताचा पत्ता</h3>
+      <label class="form-label">गाव <span>(Village)</span></label>
+      <input type="text" class="form-input" value="अगलगाव" placeholder="गावाचे नाव">
+
+      <label class="form-label">जमिनीचे गट नंबर <span>(Survey no.)</span></label>
+      <input type="text" class="form-input" placeholder="उदा: गट नं. 142">
+
+      <label class="form-label">विशेष सूचना <span>(Special instructions)</span></label>
+      <input type="text" class="form-input" placeholder="उदा: द्राक्ष बागेसाठी अनुभवी मजूर हवे">
+    </div>
+
+    <div class="note-box">
+      <strong>⚠️ लक्षात ठेवा:</strong><br>
+      बुकिंग झाल्यावर तुम्हाला WhatsApp वर पुष्टी येईल. मजूर न मिळाल्यास 2 तासात कळवले जाईल.
+    </div>
+
+    <button class="submit-btn" onclick="go('success')">
+      📲 बुकिंग पाठवा · Send Booking
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 5: SUCCESS -->
+<div id="success" class="screen">
+  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; background:var(--cream);">
+    <div class="success-circle">✓</div>
+    <div class="success-title">बुकिंग नोंदवली!</div>
+    <p class="success-sub">
+      तुमची विनंती पाठवली आहे.<br>
+      मजूर मिळताच WhatsApp वर कळवले जाईल.
+    </p>
+
+    <div class="booking-ref">
+      <div class="ref-row">
+        <span class="ref-label">बुकिंग ID</span>
+        <span class="ref-value">#GS-2847</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-label">सेवा</span>
+        <span class="ref-value" id="confirmService">छाटणी ✂️</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-label">स्थिती</span>
+        <span class="ref-value" style="color:var(--wheat)">⏳ शोधत आहोत</span>
+      </div>
+      <div class="ref-row">
+        <span class="ref-label">अंदाजित खर्च</span>
+        <span class="ref-value" style="color:var(--leaf)">₹1,200–1,600</span>
+      </div>
+    </div>
+
+    <button class="whatsapp-btn" onclick="alert('WhatsApp वर शेअर करतो...\n\nHi! I booked farm labour via GramSeva.\nBooking ID: #GS-2847\nService: छाटणी\nDate: Tomorrow')">
+      <span>📱</span> WhatsApp वर शेअर करा
+    </button>
+    <button class="btn-secondary" style="color:var(--clay); border-color:var(--clay);" onclick="go('farmerhome')">
+      मुख्यपृष्ठावर जा →
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 6: WORKER HOME -->
+<div id="workerhome" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="go('roleselect')">←</button>
+    <span class="nav-title">ग्रामसेवा · मजूर पोर्टल</span>
+    <div class="nav-avatar">👷</div>
+  </div>
+  <div class="page-content">
+
+    <div class="worker-greeting">
+      <h2>नमस्कार, रामू!</h2>
+      <p>आजच्या कामाच्या संधी पाहा 👇</p>
+      <div class="earning-tag">💰 या आठवड्यात कमाई: ₹3,200</div>
+    </div>
+
+    <!-- Availability Toggle -->
+    <div class="avail-row">
+      <div class="avail-label">
+        मी उपलब्ध आहे
+        <span>Available for work today</span>
+      </div>
+      <div class="toggle on" id="availToggle" onclick="toggleAvail()"></div>
+    </div>
+
+    <!-- Skills -->
+    <div class="section-label">माझी कौशल्ये</div>
+    <div class="skills-row">
+      <span class="skill-badge">✂️ छाटणी</span>
+      <span class="skill-badge">🍇 तोडणी</span>
+      <span class="skill-badge">💧 फवारणी</span>
+    </div>
+
+    <!-- Available Jobs -->
+    <div class="section-label">उपलब्ध काम</div>
+
+    <div class="job-card">
+      <div class="job-head">
+        <div class="job-title">✂️ छाटणी — द्राक्ष</div>
+        <div class="job-wage">₹500 <span>/ दिवस</span></div>
+      </div>
+      <div class="job-meta">
+        <span class="job-tag">📅 उद्या, सकाळी 7</span>
+        <span class="job-tag">📍 अगलगाव — 2 किमी</span>
+        <span class="job-tag">⏱ 1 दिवस</span>
+        <span class="job-tag">🍇 3 एकर</span>
+      </div>
+      <div class="job-actions">
+        <button class="btn-accept" onclick="acceptJob(this)">✓ स्वीकार करा · Accept</button>
+        <button class="btn-decline">✕</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="job-head">
+        <div class="job-title">💧 फवारणी</div>
+        <div class="job-wage">₹400 <span>/ दिवस</span></div>
+      </div>
+      <div class="job-meta">
+        <span class="job-tag">📅 8 जून, सकाळी 6</span>
+        <span class="job-tag">📍 खोत वाडी — 4 किमी</span>
+        <span class="job-tag">⏱ 1 दिवस</span>
+      </div>
+      <div class="job-actions">
+        <button class="btn-accept" onclick="acceptJob(this)">✓ स्वीकार करा · Accept</button>
+        <button class="btn-decline">✕</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="job-head">
+        <div class="job-title">🌱 पेरणी — ऊस</div>
+        <div class="job-wage">₹450 <span>/ दिवस</span></div>
+      </div>
+      <div class="job-meta">
+        <span class="job-tag">📅 10 जून</span>
+        <span class="job-tag">📍 शिरगाव — 6 किमी</span>
+        <span class="job-tag">⏱ 2 दिवस</span>
+      </div>
+      <div class="job-actions">
+        <button class="btn-accept" onclick="acceptJob(this)">✓ स्वीकार करा · Accept</button>
+        <button class="btn-decline">✕</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="bottom-nav" style="background:var(--leaf);">
+    <button class="bnav-item active">
+      <span class="bnav-icon">🏠</span>
+      <span class="bnav-label">मुख्यपृष्ठ</span>
+    </button>
+    <button class="bnav-item">
+      <span class="bnav-icon">📋</span>
+      <span class="bnav-label">माझे काम</span>
+    </button>
+    <button class="bnav-item">
+      <span class="bnav-icon">💰</span>
+      <span class="bnav-label">कमाई</span>
+    </button>
+    <button class="bnav-item" onclick="alert('ग्रामसेवा सहाय्य\n📱 9999-XXXXXX\nWhatsApp वर मराठीत बोला')">
+      <span class="bnav-icon">💬</span>
+      <span class="bnav-label">मदत</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  let workerCount = 4;
+  let selectedService = { name: 'छाटणी', icon: '✂️' };
+
+  function go(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function selectService(name, icon) {
+    selectedService = { name, icon };
+    document.getElementById('selName').textContent = name;
+    document.getElementById('selIcon').textContent = icon;
+    document.getElementById('confirmService').textContent = name + ' ' + icon;
+  }
+
+  function changeWorkers(delta) {
+    workerCount = Math.max(1, Math.min(20, workerCount + delta));
+    document.getElementById('workerCount').textContent = workerCount;
+  }
+
+  function toggleAvail() {
+    const t = document.getElementById('availToggle');
+    t.classList.toggle('on');
+  }
+
+  function acceptJob(btn) {
+    const card = btn.closest('.job-card');
+    const title = card.querySelector('.job-title').textContent;
+    const wage = card.querySelector('.job-wage').textContent.trim();
+    btn.textContent = '✓ स्वीकारले!';
+    btn.style.background = '#1a7a3a';
+    btn.disabled = true;
+    setTimeout(() => {
+      alert(`काम स्वीकारले! ✅\n\n${title}\n${wage}\n\nशेतकऱ्याचा नंबर WhatsApp वर येईल.\nवेळेवर पोहोचा! 🙏`);
+    }, 200);
+  }
+
+  // Set min date to today
+  const d = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('dateInput').min = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  document.getElementById('dateInput').value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate()+1)}`;
+</script>
+</body>
+</html>
